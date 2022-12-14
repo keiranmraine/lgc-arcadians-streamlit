@@ -1,0 +1,10 @@
+[theme]
+base="dark"
+primaryColor="#4f7392"
+backgroundColor="#000000"
+secondaryBackgroundColor="#323f43"
+
+[server]
+# Max size, in megabytes, for files uploaded with the file_uploader.
+# Default: 200
+maxUploadSize = 20
