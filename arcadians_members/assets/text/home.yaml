@@ -1,0 +1,15 @@
+intro: |
+  # Letchworth Arcadians Administration
+
+  This tool is used to update elements of the private members area.
+
+  ----
+
+mode_help: |
+  - Add files:
+      - Add new sheet music or audio recordings.
+  - Add notice:
+      - Add a new header notice to the main page.
+  - Refresh:
+      - Publish changes to the accessible site.
+      - Please only trigger once you complete all uploads and notice updates.

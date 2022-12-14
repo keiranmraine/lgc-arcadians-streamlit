@@ -1,2 +1,11 @@
 boto3
+# mkdocs stuff
+mdx_truly_sane_lists
+# mkdocs-exclude
+mkdocs-git-revision-date-localized-plugin
+# mkdocs-include-markdown-plugin
+mkdocs-material
+mkdocs-minify-plugin
+pyyaml
 streamlit
+streamlit-quill

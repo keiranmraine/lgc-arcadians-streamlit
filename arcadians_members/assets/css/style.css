@@ -1,0 +1,3 @@
+div[role="radiogroup"] >  :first-child{
+    display: none !important;
+}
