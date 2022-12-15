@@ -6,14 +6,12 @@ from arcadians_members.notices import notice_diag
 
 texts = am_utils.get_texts(__file__)
 
+st.set_page_config(page_title="Letchworth Arcadians Admin", layout="wide")
 am_utils.inject_css()  # primarily to handle radio-select limitations
 
 st.markdown(texts["intro"])
 (c1, c2) = st.columns(2)
-c1.write("What do you want to do?")
-update_mode = c1.radio(
-    "Modify", ["null", "Add files", "Add notice", "Refresh"], horizontal=True, label_visibility="collapsed"
-)
+update_mode = c1.radio("What do you want to do?", ["null", "Add files", "Add notice", "Update Site"], horizontal=True)
 c2.expander("Help", expanded=False).markdown(texts["mode_help"])
 
 st.markdown("----")
@@ -24,7 +22,7 @@ if update_mode == "Add notice":
     notice_diag()
 elif update_mode == "Add files":
     file_upload()
-elif update_mode == "Refresh":
+elif update_mode == "Update Site":
     st.write(update_mode)
 else:
     st.error(f"Unknown radio button option '{update_mode}'")

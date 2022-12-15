@@ -2,12 +2,9 @@ import streamlit as st
 from streamlit_quill import st_quill
 
 import arcadians_members.utils as am_utils
+from arcadians_members.aws import sdb_write
 
 texts = am_utils.get_texts(__file__)
-
-
-def write_notice(content: str):
-    st.write("Notice submitted (not really)")
 
 
 def notice_diag():
@@ -21,4 +18,4 @@ def notice_diag():
     st.expander("Preview", expanded=True).write(content, unsafe_allow_html=True)
     submitted = st.button("Submit notice")
     if submitted:
-        write_notice(content)
+        sdb_write("notice", [{"Notice": content}])
