@@ -98,3 +98,30 @@ def s3_write(files: List[Dict[str, Any]]):
         with st.spinner(f"Uploading to S3...{upload['path']}"):
             client.put_object(Body=upload["file"], Bucket=BUCKET, Key=upload["path"], ContentType=f"{type}/{encoding}")
     st.success("All files uploaded")
+
+
+def sdb_content(data_type: str) -> List[Dict[str, Any]]:
+    client = get_client("sdb")
+    response = client.list_domains(MaxNumberOfDomains=10)
+    data_domain = f"{DOMAIN_ROOT}-{data_type}"
+    if "DomainNames" not in response or data_domain not in response["DomainNames"]:
+        return []
+    more_data = True
+    next_token = ""
+    items = []
+    while more_data:
+        response = client.select(SelectExpression=f"select * from `{data_domain}`", NextToken=next_token)
+        if "Items" not in response:
+            break
+
+        if "NextToken" in response:
+            next_token = response["NextToken"]
+        else:
+            more_data = False
+
+        for item in response["Items"]:
+            item_map = {"Id": item["Name"]}
+            for attr in item["Attributes"]:
+                item_map[attr["Name"]] = attr["Value"]
+            items.append(item_map)
+    return items

@@ -3,6 +3,7 @@ import streamlit as st
 import arcadians_members.utils as am_utils
 from arcadians_members.files import file_upload
 from arcadians_members.notices import notice_diag
+from arcadians_members.update import generate
 
 texts = am_utils.get_texts(__file__)
 
@@ -23,7 +24,7 @@ if update_mode == "Add notice":
 elif update_mode == "Add files":
     file_upload()
 elif update_mode == "Update Site":
-    st.write(update_mode)
+    generate()
 else:
     st.error(f"Unknown radio button option '{update_mode}'")
     st.stop()

@@ -23,7 +23,7 @@ def file_upload():
     production = st.selectbox("Assign files to production", options=production_list())
     if production == "Select...":
         st.stop()
-    if production == "Add new production":
+    if production == "Add new production...":
         production = st.text_input("New name")
     if len(production) == 0:
         st.stop()
