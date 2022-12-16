@@ -1,4 +1,5 @@
 import os
+import signal
 from pathlib import Path
 from typing import Dict
 
@@ -9,6 +10,12 @@ BASE = Path(__file__).parent.resolve()
 
 BLOCK_FMT_TEXT = os.path.join(BASE, "assets", "text", "{}.yaml")
 BLOCK_FMT_DATA = os.path.join(BASE, "assets", "data", "{}.yaml")
+
+
+def kill_server():
+    if "server_pid" in st.session_state:
+        os.kill(st.session_state["server_pid"], signal.SIGTERM)
+        del st.session_state["server_pid"]
 
 
 def _yaml_to_dict(filename):

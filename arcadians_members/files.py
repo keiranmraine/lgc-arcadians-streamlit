@@ -6,7 +6,7 @@ import streamlit as st
 import arcadians_members.utils as am_utils
 from arcadians_members import aws
 
-# texts = am_utils.get_texts(__file__)
+texts = am_utils.get_texts(__file__)
 
 
 def production_list() -> List[str]:
@@ -20,29 +20,37 @@ def clean(instr: str) -> str:
 
 
 def file_upload():
-    production = st.selectbox("Assign files to production", options=production_list())
+    (c_1, c2) = st.columns(2)
+    c2.expander("Help", expanded=False).markdown(texts["list_help"])
+    production = c_1.selectbox("Assign files to production", options=production_list())
     if production == "Select...":
         st.stop()
     if production == "Add new production...":
-        production = st.text_input("New name")
+        production = c_1.text_input("New production")
     if len(production) == 0:
         st.stop()
     file_count = st.slider("Number of files to upload", min_value=1, max_value=10)
     st.markdown("----")
-    (c_ftype, c_name, c_part, c_file) = st.columns([1, 2, 2, 4])
+    (c_ftype, c_title, c_part, c_file) = st.columns([1, 2, 2, 4])
     c_ftype.write("Type")
-    c_name.write("Name")
+    c_title.write("Title")
     c_part.write("Part")
     c_file.write("File to upload")
     file_map = {}
+    copied_title = ""
     for i in range(0, file_count):
-        (c_ftype, c_name, c_part, c_file) = st.columns([1, 2, 2, 4])
+        (c_ftype, c_title, c_part, c_file) = st.columns([1, 2, 2, 4])
         file_map[f"type_{i}"] = c_ftype.radio(
             "File type", ["null", "Audio", "Score"], label_visibility="hidden", key=f"type_{i}"
         )
-        file_map[f"name_{i}"] = c_name.text_input("Name", label_visibility="hidden", key=f"name_{i}")
+        file_map[f"title_{i}"] = c_title.text_input(
+            "Title", label_visibility="hidden", key=f"title_{i}", value=copied_title
+        )
         file_map[f"part_{i}"] = c_part.text_input("Description", label_visibility="hidden", key=f"part_{i}")
         file_map[f"file_{i}"] = c_file.file_uploader("File to upload", label_visibility="hidden", key=f"file_{i}")
+        if i == 0 and file_count > 1:
+            if c_title.checkbox("Copy title down?"):
+                copied_title = file_map[f"title_{i}"]
 
     clean_map = {}
     md5digests = {}
@@ -57,7 +65,7 @@ def file_upload():
             if group == "type":
                 if v != "null":
                     clean_map[i][group] = v
-            elif group == "name":
+            elif group == "title":
                 if len(v) > 0:
                     clean_map[i][group] = v
             elif group == "part":
@@ -109,12 +117,12 @@ def file_upload():
     s3_records = []
     for f_map in clean_map.values():
         filename = f"{f_map['part']}.{f_map['file'].name.split('.')[-1]}"
-        path = f"files/{clean(production)}/{clean(f_map['name'])}/{clean(filename)}"
+        path = f"files/{clean(production)}/{clean(f_map['title'])}/{clean(filename)}"
         sdb_records.append(
             {
                 "Production": production,
                 "Type": f_map["type"],
-                "Name": f_map["name"],
+                "Name": f_map["title"],
                 "Part": f_map["part"],
                 "Path": f"/{path}",  # as will be referenced as root of bucket & site
             }

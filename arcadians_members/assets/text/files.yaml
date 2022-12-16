@@ -1,0 +1,21 @@
+list_help: |
+  * Assign files to production
+      * To add a new production select 'Add new production...' and enter the new value in the subsequent field and press enter.
+      * New "production" entries are only saved when a file upload has been completed.
+  * Number of files to upload
+      * You can upload up to 10 files at a time
+  * Type
+      * Audio - Any files that should be tagged as audio
+      * Score - Any form of sheet music, libretto etc.
+      * *File types are not restricted on either*
+  * Title
+      * Title of song/music
+      * If multiple files will be added for the same song/music use the same title
+      * When more than 1 files are being uploaded the first title can be copied to all rows by selecting:
+          * `Copy title down?`
+  * Part
+      * Distinguish multiple files for the same title, e.g. Piano acc, Tenor, SATB.
+  * File to upload
+      * Standard drag'n drop or browse to files.
+  * Allow duplicate files?
+      * Do not select by default, mainly for development.
