@@ -130,4 +130,5 @@ dmypy.json
 
 ## Extas
 /env.sh
-/generated
+/docs
+/mkdocs.yaml
