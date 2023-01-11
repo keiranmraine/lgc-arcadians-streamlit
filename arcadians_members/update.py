@@ -14,19 +14,20 @@ texts = am_utils.get_texts(__file__)
 def build():
     with st.spinner("Pulling notice data"):
         notice_items = am_aws.sdb_content("notice")
-    st.write(notice_items)
+    # st.write(notice_items)
     st.success("Notice data retrieved")
     with st.spinner("Pulling file data"):
         file_items = am_aws.sdb_content("file")
-    st.write(file_items)
+    # st.write(file_items)
     st.success("File data retrieved")
-    st.write(os.getcwd())
+    # st.write(os.getcwd())
     with st.spinner("Building site"):
         am_site.build_site(notice_items, file_items)
         subprocess.run("mkdocs build -d site")
     st.success("Site has built successfully")
     # spinner for s3 deploy
 
+    st.info(texts["intro"])
     deploy = st.button("Deploy")
 
     if deploy:
@@ -43,7 +44,6 @@ def build():
 
 
 def generate():
-    st.info(texts["intro"])
     deploy = build()
     if deploy:
         st.write("deploying")

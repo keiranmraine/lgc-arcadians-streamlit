@@ -13,6 +13,12 @@ import streamlit as st
 MODE = os.environ["DEPLOY_MODE"] if "DEPLOY_MODE" in os.environ else "develop"
 DOMAIN_ROOT = f"lgc-arcadians-{MODE}"
 BUCKET = "lgc-arcadians-members"
+CF_DIST = "https://d3vp45trvzelfm.cloudfront.net"  # will become lams.members....
+
+
+def dl_link(path):
+    url = f"[Download]({CF_DIST}{path})"
+    return url + "{ target=_blank }"
 
 
 def flatten_dict(data: Dict[str, Any], prefix=None):

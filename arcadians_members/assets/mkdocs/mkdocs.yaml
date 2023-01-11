@@ -23,6 +23,7 @@ markdown_extensions:
   # https://squidfunk.github.io/mkdocs-material/setup/extensions/python-markdown/
   - attr_list
   - mdx_truly_sane_lists
+  - admonition
 
 plugins:
   - include-markdown
@@ -39,6 +40,10 @@ plugins:
   - exclude:
       glob:
         - includes/*.md
+
+extra_javascript:
+  - https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js
+  - javascripts/tablesort.js
 
 # extra_css:
 #   - css/extra.css
