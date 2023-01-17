@@ -29,7 +29,7 @@ def notice_as_note(notice: Dict[str, str]) -> str:
     formatted = f'!!! note "Latest information <small>(posted: {fmt_dt})</small>"\n'
     for l in notice["Notice"].split("\n"):
         formatted += f"    {l}\n"
-    formatted += "\n    <small>Please see the side menu for older messages.</small>\n"
+    formatted += "\nPlease see the [here](/notice_archive.html) for older messages.\n\n----\n"
     return formatted
 
 
@@ -60,11 +60,22 @@ def populate_notices(notices):
 
 def file_tables(files):
     productions = {}
+    max_ts = "0000"
     for f in files:
         prod = f["Production"]
         if prod not in productions:
             productions[prod] = []
+        fmt_ts = convert_timestamp(f["Timestamp"])
+        if fmt_ts > max_ts:
+            max_ts = fmt_ts
+        f["fmt_ts"] = fmt_ts
         productions[prod].append(f)
+
+    with open(f"./docs/includes/file_info.md", "w") as file_md:
+        dt = datetime.strptime(max_ts, "%Y-%m-%d/%H:%M:%S")
+
+        print(f"New files were added: {dt.strftime('%A %d %B')}", file=file_md)
+        print(f"\n\n***This should have a table of files added in the last 5 days***\n\n", file=file_md)
 
     ordered_prods = {}
     os.makedirs("./docs/productions/", exist_ok=True)
@@ -75,8 +86,11 @@ def file_tables(files):
             print("| Name | Part | Type | File | Added |", file=file_md)
             print("| ---- | ---- | ---- | ---- | ----- |", file=file_md)
             for pf in prod_files:
-                ts = convert_timestamp(pf["Timestamp"])
-                print(f"| {pf['Name']} | {pf['Part']} | {pf['Type']} | {dl_link(pf['Path'])} | {ts} |", file=file_md)
+
+                print(
+                    f"| {pf['Name']} | {pf['Part']} | {pf['Type']} | {dl_link(pf['Path'])} | {pf['fmt_ts']} |",
+                    file=file_md,
+                )
 
 
 def build_site(notices, files):

@@ -1,5 +1,9 @@
+import mimetypes
 import os
+import pathlib
+import time
 import uuid
+from contextlib import contextmanager
 from datetime import datetime
 from mimetypes import guess_type
 from typing import Any
@@ -13,7 +17,22 @@ import streamlit as st
 MODE = os.environ["DEPLOY_MODE"] if "DEPLOY_MODE" in os.environ else "develop"
 DOMAIN_ROOT = f"lgc-arcadians-{MODE}"
 BUCKET = "lgc-arcadians-members"
-CF_DIST = "https://d3vp45trvzelfm.cloudfront.net"  # will become lams.members....
+CF_DIST = "https://dv0cgprb23go3.cloudfront.net"  # will become lams.members....
+CF_ID = "E2HM969BWTU3KK"
+
+
+def invalidation_obj():
+    return {"Paths": {"Quantity": 1, "Items": ["/*"]}, "CallerReference": str(datetime.now().timestamp())}
+
+
+@contextmanager
+def cwd(path):
+    oldpwd = os.getcwd()
+    os.chdir(path)
+    try:
+        yield
+    finally:
+        os.chdir(oldpwd)
 
 
 def dl_link(path):
@@ -51,6 +70,66 @@ def get_client(purpose: str):
         aws_access_key_id=os.environ["LIMITED_ACCESS_KEY"],
         aws_secret_access_key=os.environ["LIMITED_SECRET_KEY"],
     )
+
+
+def sync():
+    """
+    There's a small possibility files may need deleting over time.
+    """
+    to_sync = "site"
+    with cwd(to_sync):
+        l_paths = pathlib.Path(".").rglob("*")
+        l_set = {}
+        for po in l_paths:
+            if po.is_dir():
+                continue
+            l_set[str(po).replace("\\", "/")] = 1
+
+        s3 = get_client("s3")
+        # this block just puts all the s3 object keys into a dict
+        s3_set = {}
+        bkt_resp = s3.list_objects_v2(Bucket=BUCKET, MaxKeys=2)
+        while True:
+            for f in bkt_resp["Contents"]:
+                if f["Key"].startswith("files/"):
+                    continue
+                s3_set[f["Key"]] = 1
+            if bkt_resp["IsTruncated"] is False:
+                break
+            else:
+                bkt_resp = s3.list_objects_v2(
+                    Bucket=BUCKET, MaxKeys=2, ContinuationToken=bkt_resp["NextContinuationToken"]
+                )
+
+        # now compare the lists anything in s3 not local needs deleting (safe as we excluded `files/`)
+        s3_deletes = [{"Key": k} for k in s3_set if k not in l_set]
+        if s3_deletes:
+            with st.spinner("Removing files no longer needed..."):
+                resp = s3.delete_objects(Bucket=BUCKET, Delete={"Objects": s3_deletes})
+            st.success("Files removed")
+
+        # then load all the local site
+        with st.spinner("Uploading refreshed site..."):
+            for k in l_set:
+                mtype = mimetypes.guess_type(k)[0]
+                s3.upload_file(k, BUCKET, k, ExtraArgs={"ContentType": mtype})
+        st.success("Site uploaded")
+
+        ### needs a spinner
+        with st.spinner("Updating web-caches...(this can take a while)"):
+            cf = get_client("cloudfront")
+            inval_resp = cf.create_invalidation(DistributionId=CF_ID, InvalidationBatch=invalidation_obj())
+            status = ""
+            chk_counter = 0
+            while status != "Completed":
+                if chk_counter > 120:
+                    break
+                if status == "":
+                    time.sleep(5)
+                get_i_resp = cf.get_invalidation(DistributionId=CF_ID, Id=inval_resp["Invalidation"]["Id"])
+                status = get_i_resp["Invalidation"]["Status"]
+                chk_counter += 1
+        st.success(f"Site fully available, access the members section directly [here]({CF_DIST}).")
 
 
 def sdb_write(data_type: str, data_dict: List[Dict[str, Any]]):

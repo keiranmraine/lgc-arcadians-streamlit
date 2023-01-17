@@ -11,6 +11,16 @@ BASE = Path(__file__).parent.resolve()
 BLOCK_FMT_TEXT = os.path.join(BASE, "assets", "text", "{}.yaml")
 BLOCK_FMT_DATA = os.path.join(BASE, "assets", "data", "{}.yaml")
 
+MODE = os.environ["DEPLOY_MODE"] if "DEPLOY_MODE" in os.environ else "develop"
+USER = os.environ["ADMIN_U"]
+PASS = os.environ["ADMIN_P"]
+
+
+def validate(u, p):
+    if u == USER and p == PASS:
+        return True
+    return False
+
 
 def kill_server():
     if "server_pid" in st.session_state:

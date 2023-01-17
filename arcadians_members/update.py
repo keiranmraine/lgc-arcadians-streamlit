@@ -12,26 +12,27 @@ texts = am_utils.get_texts(__file__)
 
 
 def build():
-    with st.spinner("Pulling notice data"):
-        notice_items = am_aws.sdb_content("notice")
-    # st.write(notice_items)
-    st.success("Notice data retrieved")
-    with st.spinner("Pulling file data"):
-        file_items = am_aws.sdb_content("file")
-    # st.write(file_items)
-    st.success("File data retrieved")
-    # st.write(os.getcwd())
-    with st.spinner("Building site"):
-        am_site.build_site(notice_items, file_items)
-        subprocess.run("mkdocs build -d site")
-    st.success("Site has built successfully")
-    # spinner for s3 deploy
+    col_a, col_b, col_c = st.columns(3)
+    with col_a:
+        with st.spinner("Pulling notice data"):
+            notice_items = am_aws.sdb_content("notice")
+        st.success("Notice data retrieved")
+    with col_b:
+        with st.spinner("Pulling file data"):
+            file_items = am_aws.sdb_content("file")
+        st.success("File data retrieved")
+    with col_c:
+        with st.spinner("Building site"):
+            am_site.build_site(notice_items, file_items)
+            subprocess.run("mkdocs build -d site")
+        st.success("Site has built successfully")
 
     st.info(texts["intro"])
     deploy = st.button("Deploy")
 
     if deploy:
         am_utils.kill_server()
+        am_aws.sync()
     else:
         # output = subprocess.check_output("python -m http.server -d site 9001 >& /dev/null &; echo $!", shell=True)
         p = subprocess.Popen("python -m http.server -d site 9001".split())

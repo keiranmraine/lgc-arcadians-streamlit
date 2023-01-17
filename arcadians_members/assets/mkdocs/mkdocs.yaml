@@ -3,7 +3,12 @@ site_name: Arcadians Members
 theme:
   palette:
     scheme: slate
-  # favicon: images/icons/favicon.png
+    primary: blue
+    accent: light blue
+  font:
+    text: Jost
+  logo: images/la-ya-new-384x96.png
+  favicon: images/letchworth-arcadians-musical-society-696x495-128x91-1.png
   # icon:
   #   logo: material/dna
   #   admonition:
