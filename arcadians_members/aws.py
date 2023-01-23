@@ -88,7 +88,7 @@ def sync():
         s3 = get_client("s3")
         # this block just puts all the s3 object keys into a dict
         s3_set = {}
-        bkt_resp = s3.list_objects_v2(Bucket=BUCKET, MaxKeys=2)
+        bkt_resp = s3.list_objects_v2(Bucket=BUCKET)
         while True:
             for f in bkt_resp["Contents"]:
                 if f["Key"].startswith("files/"):
@@ -97,9 +97,7 @@ def sync():
             if bkt_resp["IsTruncated"] is False:
                 break
             else:
-                bkt_resp = s3.list_objects_v2(
-                    Bucket=BUCKET, MaxKeys=2, ContinuationToken=bkt_resp["NextContinuationToken"]
-                )
+                bkt_resp = s3.list_objects_v2(Bucket=BUCKET, ContinuationToken=bkt_resp["NextContinuationToken"])
 
         # now compare the lists anything in s3 not local needs deleting (safe as we excluded `files/`)
         s3_deletes = [{"Key": k} for k in s3_set if k not in l_set]

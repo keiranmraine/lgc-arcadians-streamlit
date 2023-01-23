@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+from operator import itemgetter
 from typing import Dict
 from typing import List
 
@@ -73,9 +74,7 @@ def file_tables(files):
 
     with open(f"./docs/includes/file_info.md", "w") as file_md:
         dt = datetime.strptime(max_ts, "%Y-%m-%d/%H:%M:%S")
-
-        print(f"New files were added: {dt.strftime('%A %d %B')}", file=file_md)
-        print(f"\n\n***This should have a table of files added in the last 5 days***\n\n", file=file_md)
+        print(f"New files were added: **{dt.strftime('%A %d %B')}**.", file=file_md)
 
     ordered_prods = {}
     os.makedirs("./docs/productions/", exist_ok=True)

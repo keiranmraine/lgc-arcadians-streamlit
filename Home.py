@@ -15,7 +15,7 @@ st.markdown(texts["intro"])
 st.write("Please login to proceed")
 col_a, col_b = st.columns(2)
 u_n = col_a.text_input("User")
-p_w = col_b.text_input("Password")
+p_w = col_b.text_input("Password", type="password")
 
 if len(u_n) > 0 and len(p_w) > 0:
     if am_utils.validate(u_n, p_w) is False:
