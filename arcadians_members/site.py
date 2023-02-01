@@ -99,7 +99,6 @@ def build_site(notices, files):
     3. Add notices folder, under this is a $yyyy.md
     """
     shutil.rmtree("site", ignore_errors=True)
-    shutil.rmtree("docs", ignore_errors=True)
     copy_tree("arcadians_members/assets/mkdocs", "./")
     populate_notices(notices)
     file_tables(files)
