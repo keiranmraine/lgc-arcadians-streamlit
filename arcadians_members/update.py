@@ -24,8 +24,7 @@ def build():
     with col_c:
         with st.spinner("Building site"):
             am_site.build_site(notice_items, file_items)
-            st.write(os.getcwd())
-            subprocess.run("mkdocs build -d site".split(" "))
+            subprocess.run("mkdocs build -d site".split())
         st.success("Site has built successfully")
 
     st.info(texts["intro"])
