@@ -100,8 +100,6 @@ def build_site(notices, files):
     """
     shutil.rmtree("site", ignore_errors=True)
     shutil.rmtree("docs", ignore_errors=True)
-    st.write(os.listdir(os.getcwd() + "/"))
     copy_tree("arcadians_members/assets/mkdocs", "./")
     populate_notices(notices)
     file_tables(files)
-    st.write(os.listdir(os.getcwd() + "/"))
