@@ -1,3 +1,5 @@
+import shutil
+
 import streamlit as st
 
 import arcadians_members.utils as am_utils
@@ -11,6 +13,8 @@ st.set_page_config(page_title="Letchworth Arcadians Admin", layout="wide")
 am_utils.inject_css()  # primarily to handle radio-select limitations
 
 st.markdown(texts["intro"])
+
+st.write(shutil.which("mkdocs"))
 
 st.write("Please login to proceed")
 col_a, col_b = st.columns(2)
