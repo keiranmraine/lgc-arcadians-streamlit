@@ -7,7 +7,6 @@ from typing import List
 
 import pytz
 import streamlit as st
-from distutils.dir_util import copy_tree
 
 from arcadians_members.aws import dl_link
 
@@ -99,6 +98,9 @@ def build_site(notices, files):
     3. Add notices folder, under this is a $yyyy.md
     """
     shutil.rmtree("site", ignore_errors=True)
-    copy_tree("arcadians_members/assets/mkdocs", "./")
+    shutil.rmtree("docs", ignore_errors=True)
+    st.write(os.listdir())
+    shutil.copytree("arcadians_members/assets/mkdocs/docs", "./docs")
+    st.write(os.listdir())
     populate_notices(notices)
     file_tables(files)
