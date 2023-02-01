@@ -1,4 +1,5 @@
 import os
+import shutil
 import subprocess
 import sys
 
@@ -9,6 +10,8 @@ import arcadians_members.site as am_site
 import arcadians_members.utils as am_utils
 
 texts = am_utils.get_texts(__file__)
+
+mkdocs_binary = shutil.which("mkdocs")
 
 
 def build():
@@ -24,7 +27,7 @@ def build():
     with col_c:
         with st.spinner("Building site"):
             am_site.build_site(notice_items, file_items)
-            subprocess.run("mkdocs build -d site")
+            subprocess.run(f"{mkdocs_binary} build -d site")
         st.success("Site has built successfully")
 
     st.info(texts["intro"])
