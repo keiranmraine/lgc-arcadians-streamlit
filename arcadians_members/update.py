@@ -22,7 +22,6 @@ def build():
             file_items = am_aws.sdb_content("file")
         st.success("File data retrieved")
     with col_c:
-        st.write(os.listdir(os.getcwd() + "/"))
         with st.spinner("Building site"):
             am_site.build_site(notice_items, file_items)
             subprocess.run("mkdocs build -d site")

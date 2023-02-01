@@ -98,6 +98,8 @@ def build_site(notices, files):
     2. Add files folder, under this is $production.md
     3. Add notices folder, under this is a $yyyy.md
     """
+    st.write(os.listdir(os.getcwd() + "/"))
     copy_tree("arcadians_members/assets/mkdocs", "./")
     populate_notices(notices)
     file_tables(files)
+    st.write(os.listdir(os.getcwd() + "/"))
