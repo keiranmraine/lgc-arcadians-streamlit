@@ -1,4 +1,5 @@
 import os
+import shutil
 from datetime import datetime
 from operator import itemgetter
 from typing import Dict
@@ -76,7 +77,6 @@ def file_tables(files):
         dt = datetime.strptime(max_ts, "%Y-%m-%d/%H:%M:%S")
         print(f"New files were added: **{dt.strftime('%A %d %B')}**.", file=file_md)
 
-    ordered_prods = {}
     os.makedirs("./docs/productions/", exist_ok=True)
     for prod in productions.keys():
         with open(f"./docs/productions/{prod}.md", "w") as file_md:
@@ -98,6 +98,8 @@ def build_site(notices, files):
     2. Add files folder, under this is $production.md
     3. Add notices folder, under this is a $yyyy.md
     """
+    shutil.rmtree("site", ignore_errors=True)
+    shutil.rmtree("docs", ignore_errors=True)
     st.write(os.listdir(os.getcwd() + "/"))
     copy_tree("arcadians_members/assets/mkdocs", "./")
     populate_notices(notices)
