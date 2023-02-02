@@ -3,6 +3,7 @@ import subprocess
 import sys
 
 import streamlit as st
+import streamlit.components.v1 as components
 
 import arcadians_members.aws as am_aws
 import arcadians_members.site as am_site
@@ -34,13 +35,10 @@ def build():
         am_utils.kill_server()
         am_aws.sync()
     else:
-        # output = subprocess.check_output("python -m http.server -d site 9001 >& /dev/null &; echo $!", shell=True)
         p = subprocess.Popen("python -m http.server -d site 9001".split())
         st.session_state["server_pid"] = p.pid
-        st.write(
-            f'<iframe src="http://localhost:9001/" width=100% height="1200px"></iframe>',
-            unsafe_allow_html=True,
-        )
+        components.iframe("http://localhost:9001/", height=1200)
+
     return deploy
 
 
