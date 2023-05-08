@@ -84,7 +84,6 @@ def file_tables(files):
             print("| Name | Part | Type | File | Added |", file=file_md)
             print("| ---- | ---- | ---- | ---- | ----- |", file=file_md)
             for pf in prod_files:
-
                 print(
                     f"| {pf['Name']} | {pf['Part']} | {pf['Type']} | {dl_link(pf['Path'])} | {pf['fmt_ts']} |",
                     file=file_md,
