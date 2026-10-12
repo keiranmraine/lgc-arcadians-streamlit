@@ -13,7 +13,6 @@ from typing import List
 import boto3
 import streamlit as st
 
-
 MODE = os.environ["DEPLOY_MODE"] if "DEPLOY_MODE" in os.environ else "develop"
 DOMAIN_ROOT = f"lgc-arcadians-{MODE}"
 BUCKET = "lgc-arcadians-members"
@@ -177,7 +176,7 @@ def sdb_get_uniq(data_type: str, field: str) -> List[str]:
 def s3_write(files: List[Dict[str, Any]]):
     client = get_client("s3")
     for upload in files:
-        (type, encoding) = guess_type(upload["path"])
+        type, encoding = guess_type(upload["path"])
         with st.spinner(f"Uploading to S3...{upload['path']}"):
             client.put_object(Body=upload["file"], Bucket=BUCKET, Key=upload["path"], ContentType=f"{type}/{encoding}")
     st.success("All files uploaded")
