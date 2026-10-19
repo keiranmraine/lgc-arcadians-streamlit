@@ -20,7 +20,7 @@ def clean(instr: str) -> str:
 
 
 def file_upload():
-    (c_1, c2) = st.columns(2)
+    c_1, c2 = st.columns(2)
     c2.expander("Help", expanded=False).markdown(texts["list_help"])
     production = c_1.selectbox("Assign files to production", options=production_list())
     if production == "Select...":
@@ -31,7 +31,7 @@ def file_upload():
         st.stop()
     file_count = st.slider("Number of files to upload", min_value=1, max_value=10)
     st.markdown("----")
-    (c_ftype, c_title, c_part, c_file) = st.columns([1, 2, 2, 4])
+    c_ftype, c_title, c_part, c_file = st.columns([1, 2, 2, 4])
     c_ftype.write("Type")
     c_title.write("Title")
     c_part.write("Part")
@@ -39,7 +39,7 @@ def file_upload():
     file_map = {}
     copied_title = ""
     for i in range(0, file_count):
-        (c_ftype, c_title, c_part, c_file) = st.columns([1, 2, 2, 4])
+        c_ftype, c_title, c_part, c_file = st.columns([1, 2, 2, 4])
         file_map[f"type_{i}"] = c_ftype.radio(
             "File type", ["null", "Audio", "Score"], label_visibility="hidden", key=f"type_{i}"
         )
@@ -58,7 +58,7 @@ def file_upload():
     ignore_clash = st.checkbox("Allow duplicate files?")
     if st.button("Write files"):
         for k, v in file_map.items():
-            (group, i) = k.split("_")
+            group, i = k.split("_")
             i = int(i)
             if i not in clean_map:
                 clean_map[i] = {}
