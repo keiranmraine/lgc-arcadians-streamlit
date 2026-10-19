@@ -26,7 +26,7 @@ else:
 
 st.markdown("----")
 
-(c1, c2) = st.columns(2)
+c1, c2 = st.columns(2)
 update_mode = c1.radio("What do you want to do?", ["null", "Add Files", "Add Notice", "Update Site"], horizontal=True)
 c2.expander("Help", expanded=False).markdown(texts["mode_help"])
 
